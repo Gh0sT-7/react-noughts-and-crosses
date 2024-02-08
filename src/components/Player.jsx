@@ -1,12 +1,12 @@
 import { useState } from "react";
 
-export default function Player({initialName, symbol, isActive}) {
+export default function Player({ initialName, symbol, isActive }) {
     const [playerName, setPlayerName] = useState(initialName);
     const [isEditing, setIsEditing] = useState(false);
 
     function handleEditPlayerClick(isEditing) {
         setIsEditing((editing) => !editing); // Use this way of doing things as it makes a call to update.
-        setIsEditing(!editing); // This way doesn't allow immediate updating, only schedules the update in the future.
+        // setIsEditing(!editing); // This way doesn't allow immediate updating, only schedules the update in the future.
 
     }
 
@@ -20,14 +20,14 @@ export default function Player({initialName, symbol, isActive}) {
         <li className={isActive ? 'active' : undefined}>
             <span className="player">
                 {isEditing ? (
-                    <input 
+                    <input
                         required
                         type="text"
                         value={playerName}
                         onChange={handleNameChange}
                     />
                 ) : (
-                        <span className="player-name">{playerName}</span>
+                    <span className="player-name">{playerName}</span>
                 )}
                 <span className="player-symbol">{symbol}</span>
             </span>
