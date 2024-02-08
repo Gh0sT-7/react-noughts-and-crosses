@@ -1,13 +1,4 @@
-// import { useState } from "react";
-
-const initialGameBoard = [
-    // [null, 'X', 'O'],
-    [null, null, null],
-    [null, null, null],
-    [null, null, null]
-];
-
-export default function GameBoard({ onSqureSelection/*, activePlayerSymbol*/, turns }) {
+export default function GameBoard({ onSqureSelection/*, activePlayerSymbol*/, board }) {
 
     /*
         Doesn't really work all that well as in order for the Log to work, you'll need to duplicate
@@ -25,19 +16,9 @@ export default function GameBoard({ onSqureSelection/*, activePlayerSymbol*/, tu
     //     onSqureSelection();
     // }
 
-
-    let gameBoard = initialGameBoard;
-
-    for (const turn of turns) {
-        const { square, player } = turn;
-        const { row, column } = square;
-
-        gameBoard[row][column] = player;
-    }
-
     return (
         <ol id="game-board">
-            {gameBoard.map((row, rowIndex) => (
+            {board.map((row, rowIndex) => (
                 <li key={rowIndex}>
                     <ol>
                         {row.map((playerSymbol, columnIndex) => (

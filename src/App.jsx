@@ -1,8 +1,17 @@
 import { useState } from "react";
+import { WINNING_COMBINATIONS } from './winning-combinations.js'
 
 import Player from "./components/Player";
 import GameBoard from "./components/GameBoard";
 import Log from "./components/Log";
+
+
+const initialGameBoard = [
+    // [null, 'X', 'O'],
+    [null, null, null],
+    [null, null, null],
+    [null, null, null]
+];
 
 
 // Moved into it's own function due to duplication.
@@ -35,6 +44,33 @@ function App() {
     const activePlayer = deriveActivePlayer(gameTurns);
 
 
+    let gameBoard = initialGameBoard;
+
+    for (const turn of gameTurns) {
+        const { square, player } = turn;
+        const { row, column } = square;
+
+        gameBoard[row][column] = player;
+    }
+
+
+    let winner;
+
+    for (const combination of WINNING_COMBINATIONS) {
+        const firstSquareSymbol = gameBoard[combination[0].row][combination[0].column];
+        const secondSquareSymbol = gameBoard[combination[1].row][combination[1].column];
+        const thirdSquareSymbol = gameBoard[combination[2].row][combination[2].column];
+
+        if (
+            firstSquareSymbol &&
+            firstSquareSymbol === secondSquareSymbol &&
+            firstSquareSymbol === thirdSquareSymbol
+        ) {
+            winner = firstSquareSymbol;
+        }
+    }
+
+
     function handleSelectedSquare(rowIndex, columnIndex) {
         // setActivePlayer((currentlyActivePlayer) => currentlyActivePlayer === 'X' ? 'O' : 'X'); // Uneeded state from eplantion above.
         setGameTurns((prevTurns) => {
@@ -64,9 +100,10 @@ function App() {
                     <Player initialName="Player 2" symbol="O" isActive={activePlayer === 'O'} />
                 </ol>
 
+                {winner && <p>You won, {winner}!</p>}
 
                 {/* <GameBoard onSqureSelection={handleSelectedSquare} activePlayerSymbol={activePlayer} /> */}
-                <GameBoard onSqureSelection={handleSelectedSquare} turns={gameTurns} />
+                <GameBoard onSqureSelection={handleSelectedSquare} board={gameBoard} />
             </div>
 
             <Log turns={gameTurns} />
