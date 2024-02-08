@@ -1,0 +1,36 @@
+#scopedGameBoard {
+    #game-board {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        gap: 2rem;
+        justify-content: center;
+        margin: 3rem 0;
+        padding: 0;
+
+        ol {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        button {
+            border: none;
+            width: 8rem;
+            height: 8rem;
+            padding: 1rem;
+            background: #aca788;
+            cursor: pointer;
+            font-size: 5rem;
+            font-family: 'Caprasimo', cursive;
+            color: #3f3b00;
+
+            &.disabled {
+                cursor: not-allowed;
+            }
+        }
+    }
+}

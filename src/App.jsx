@@ -1,13 +1,18 @@
 import { useState } from "react";
 import { WINNING_COMBINATIONS } from './winning-combinations.js'
 
-import Player from "./components/Player";
-import GameBoard from "./components/GameBoard";
-import GameOver from "./components/GameOver.jsx";
-import Log from "./components/Log";
+import Player from "./components/Player.jsx";
+import GameBoard from "./components/GameBoard/GameBoard.jsx";
+import GameOver from "./components/GameOver/GameOver.jsx";
+import Log from "./components/Log/Log.jsx";
 
 
-const initialGameBoard = [
+const PLAYERS = {
+    X: 'Player 1',
+    O: 'Player 2',
+};
+
+const INITIAL_GAME_BOARD = [
     // [null, 'X', 'O'],
     [null, null, null],
     [null, null, null],
@@ -15,7 +20,12 @@ const initialGameBoard = [
 ];
 
 
-// Moved into it's own function due to duplication.
+/**
+ * @deriveActivePlayer
+ * Determine who the current active player is during the game.
+ * 
+ * @params gameTurns
+ */
 function deriveActivePlayer(gameTurns) {
     let currentPLayer = 'X'; // Set an initial default for checking.
 
@@ -31,25 +41,14 @@ function deriveActivePlayer(gameTurns) {
 }
 
 
-function App() {
-    const [players, setPlayers] = useState({
-        X: 'Player 1',
-        O: 'Player 2',
-    });
-    const [gameTurns, setGameTurns] = useState([]);
-    // const [activePlayer, setActivePlayer] = useState('X'); 
-    /*
-        We're managing it as state because we need to update the symbol on the board and which player turn it is.
-        Yes, we need to update the state when triggering a UI update, but we already have this in gameTurns. 
-        Technically, we're already have this information so we could trim things further as setGameTurns has what
-        we need. Instead of a dedicated activePlayer state for UI changes, we could use some derived state from 
-        the logic from inside handleSelectedSquare.
-    */
-
-    const activePlayer = deriveActivePlayer(gameTurns);
-
-
-    let gameBoard = [...initialGameBoard.map(array => [...array])];
+/**
+ * @deriveGameBoard
+ * Work out where each placement was made by each player.
+ *
+ * @params gameTurns
+ */
+function deriveGameBoard(gameTurns) {
+    let gameBoard = [...INITIAL_GAME_BOARD.map(array => [...array])];
 
     for (const turn of gameTurns) {
         const { square, player } = turn;
@@ -58,7 +57,17 @@ function App() {
         gameBoard[row][column] = player;
     }
 
+    return gameBoard;
+}
 
+
+/**
+ * @deriveWinner
+ * Determine who the winner of the game is.
+ *
+ * @params gameBoard, players
+ */
+function deriveWinner(gameBoard, players) {
     let winner;
 
     for (const combination of WINNING_COMBINATIONS) {
@@ -75,10 +84,36 @@ function App() {
         }
     }
 
-    
+    return winner;
+}
+
+
+
+function App() {
+    const [players, setPlayers] = useState(PLAYERS);
+    const [gameTurns, setGameTurns] = useState([]);
+    // const [activePlayer, setActivePlayer] = useState('X'); 
+    /*
+        We're managing the activePlayer state because we need to update the symbol on the board and which player 
+        turn it is. Yes, technically we need to update the state when triggering a UI update, but we already have
+        this in gameTurns already. As we already have this information we could trim things further as setGameTurns
+        has what we need. Instead of a dedicated activePlayer state for UI changes, we could use some derived state 
+        from the logic from inside handleSelectedSquare.
+    */
+
+    const activePlayer = deriveActivePlayer(gameTurns);
+    const gameBoard = deriveGameBoard(gameTurns);
+    const winner = deriveWinner(gameBoard, players);
     const hasDraw = gameTurns.length === 9 && !winner;
 
 
+    /**
+     * @handleSelectedSquare
+     * Handle the selection of the current square by checking which players turn it is and tracking who picked a specific square.
+     * This is achieved by keeping track of the combination of which row and column combo was chosen.
+     * 
+     * @params rowIndex, columnIndex
+     */
     function handleSelectedSquare(rowIndex, columnIndex) {
         // setActivePlayer((currentlyActivePlayer) => currentlyActivePlayer === 'X' ? 'O' : 'X'); // Uneeded state from eplantion above.
         setGameTurns((prevTurns) => {
@@ -102,9 +137,10 @@ function App() {
 
 
     /**
-     * Function for handling the changing of the player names
+     * @handlePlayerNameChange
+     * Handle the changing of player name based on the symbol they have.
      *
-     * @usage onChangeName={handlePlayerNameChange}.
+     * @params symbol, newName
      */
     function handlePlayerNameChange(symbol, newName) {
         setPlayers(prevPlayers => {
@@ -117,9 +153,10 @@ function App() {
 
 
     /**
-     * Function for GameBoard onRestart for restarting the game.
+     * @handleRestart
+     * Handle the restart of the game by resetting back to the initial state.
      *
-     * @usage onRestart={handleRestart}.
+     * @params symbol, newName
      */
     function handleRestart() {
         setGameTurns([]);
@@ -131,13 +168,13 @@ function App() {
             <div id="game-container">
                 <ol id="players" className="highlight-player">
                     <Player
-                        initialName="Player 1"
+                        initialName={PLAYERS.X}
                         symbol="X"
                         isActive={activePlayer === 'X'}
                         onChangeName={handlePlayerNameChange}
                     />
                     <Player
-                        initialName="Player 2"
+                        initialName={PLAYERS.O}
                         symbol="O"
                         isActive={activePlayer === 'O'}
                         onChangeName={handlePlayerNameChange}

@@ -1,0 +1,22 @@
+#scopedLog {
+    #log {
+        margin: 2rem auto;
+        max-width: 20rem;
+        padding: 0;
+        list-style: none;
+        text-align: center;
+        color: #3f3b00;
+
+        li {
+            animation: slide-in-from-left 1s cubic-bezier(0.075, 0.82, 0.165, 1) forwards;
+            margin: 0.75rem;
+            border-radius: 4px;
+
+            &.highlighted {
+                background-color: #3f3b00;
+                color: white;
+            }
+        }
+
+    }
+}

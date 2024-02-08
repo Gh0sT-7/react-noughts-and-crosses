@@ -4,6 +4,13 @@ export default function Player({ initialName, symbol, isActive, onChangeName }) 
     const [playerName, setPlayerName] = useState(initialName);
     const [isEditing, setIsEditing] = useState(false);
 
+
+    /**
+     * @handleEditPlayerClick
+     * Handle the triggering of the edit state for entering a player name.
+     * 
+     * @params isEditing
+     */
     function handleEditPlayerClick(isEditing) {
         setIsEditing((editing) => !editing); // Use this way of doing things as it makes a call to update.
         // setIsEditing(!editing); // This way doesn't allow immediate updating, only schedules the update in the future.
@@ -13,6 +20,13 @@ export default function Player({ initialName, symbol, isActive, onChangeName }) 
         }
     }
 
+
+    /**
+     * @handleNameChange
+     * Handle the input of the new player name.
+     * 
+     * @params event
+     */
     function handleNameChange(event) {
         console.log(event);
         console.log(event.target.value);
