@@ -43,7 +43,13 @@ export default function GameBoard({ onSqureSelection/*, activePlayerSymbol*/, tu
                         {row.map((playerSymbol, columnIndex) => (
                             <li key={columnIndex}>
                                 {/* <button onClick={() => handeSquareSelection(rowIndex, columnIndex)}>{playerSymbol}</button> */}
-                                <button onClick={() => onSqureSelection(rowIndex, columnIndex)}>{playerSymbol}</button>
+                                <button
+                                    onClick={() => onSqureSelection(rowIndex, columnIndex)}
+                                    disabled={playerSymbol !== null}
+                                    className={playerSymbol !== null ? 'disabled' : undefined}
+                                >
+                                    {playerSymbol}
+                                </button>
                             </li>
                         ))}
                     </ol>
